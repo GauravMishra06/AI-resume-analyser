@@ -1,0 +1,181 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ==========================================
+   AI Resume Analyzer - Dark Modern Design System
+   ========================================== */
+
+@layer base {
+
+  /* CSS Reset enhancement */
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    scroll-behavior: smooth;
+    color-scheme: dark;
+  }
+
+  body {
+    @apply font-sans text-gray-100 bg-surface min-h-screen;
+    font-size: 17px;
+    line-height: 1.5;
+    letter-spacing: -0.011em;
+  }
+
+  /* Focus styles */
+  :focus-visible {
+    @apply outline-none ring-2 ring-primary-500/50 ring-offset-2 ring-offset-surface;
+  }
+
+  /* Links */
+  a {
+    @apply text-primary-400 no-underline transition-all duration-200 ease-apple hover:text-primary-300;
+  }
+
+  /* Selection */
+  ::selection {
+    @apply bg-primary-500/30 text-white;
+  }
+}
+
+@layer components {
+
+  /* Container */
+  .container {
+    @apply w-full max-w-5xl mx-auto px-6 md:px-8;
+  }
+
+  .container-narrow {
+    @apply max-w-2xl mx-auto;
+  }
+
+  /* Typography */
+  .text-hero {
+    @apply text-5xl md:text-7xl font-semibold tracking-tight leading-[1.05] text-white;
+  }
+
+  .text-title {
+    @apply text-3xl md:text-5xl font-semibold tracking-tight leading-[1.1] text-white;
+  }
+
+  .text-heading {
+    @apply text-2xl font-semibold leading-snug tracking-tight text-white;
+  }
+
+  .text-subheading {
+    @apply text-xl font-medium leading-normal tracking-tight text-gray-100;
+  }
+
+  .text-body {
+    @apply text-[17px] leading-relaxed text-gray-300;
+  }
+
+  .text-small {
+    @apply text-[15px] leading-normal text-gray-400;
+  }
+
+  .text-caption {
+    @apply text-[13px] font-medium text-gray-500 tracking-wide uppercase;
+  }
+
+  /* Glass effect - Dark */
+  .glass {
+    @apply bg-surface-50/80 backdrop-blur-xl border border-white/[0.06] shadow-lg;
+  }
+
+  .glass-card {
+    @apply bg-surface-100/60 backdrop-blur-lg border border-white/[0.06] shadow-card hover:shadow-card-hover transition-all duration-300 ease-apple;
+  }
+
+  /* Card base - Dark */
+  .card {
+    @apply bg-surface-100 rounded-3xl shadow-card border border-white/[0.06] overflow-hidden;
+  }
+
+  .card-premium {
+    @apply bg-surface-100 rounded-4xl shadow-2xl border border-white/[0.08];
+  }
+
+  /* Gradient text */
+  .gradient-text {
+    @apply bg-clip-text text-transparent bg-gradient-to-br from-white to-gray-400;
+  }
+
+  .gradient-blue {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary-400 via-accent-violet to-accent-purple;
+  }
+
+  /* Button base styles */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full font-medium text-[15px] transition-all duration-300 ease-apple disabled:opacity-50 disabled:cursor-not-allowed transform active:scale-95;
+  }
+
+  .btn-primary {
+    @apply bg-primary-500 text-white hover:bg-primary-400 shadow-lg shadow-primary-500/20 hover:shadow-primary-400/30;
+  }
+
+  .btn-accent {
+    @apply bg-gradient-to-r from-primary-500 to-accent-violet text-white hover:from-primary-400 hover:to-accent-purple shadow-lg shadow-accent-violet/20;
+  }
+
+  .btn-secondary {
+    @apply bg-surface-200 text-gray-200 hover:bg-surface-300 border border-white/[0.06];
+  }
+
+  .btn-ghost {
+    @apply bg-transparent text-gray-400 hover:bg-surface-200 hover:text-gray-200;
+  }
+
+  .btn-lg {
+    @apply px-8 py-4 text-[17px] rounded-full;
+  }
+
+  .btn-sm {
+    @apply px-4 py-2 text-[13px] rounded-full;
+  }
+
+  .btn-icon {
+    @apply w-10 h-10 p-0 rounded-full flex items-center justify-center;
+  }
+}
+
+@layer utilities {
+
+  /* Scrollbar styling */
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: theme('colors.gray.700') transparent;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    @apply bg-gray-700 rounded-full;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    @apply bg-gray-600;
+  }
+
+  /* Text balance */
+  .text-balance {
+    text-wrap: balance;
+  }
+}

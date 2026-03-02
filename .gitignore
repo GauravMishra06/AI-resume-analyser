@@ -1,0 +1,61 @@
+# Dependencies
+node_modules/
+
+# Build outputs  
+dist/
+build/
+*.tsbuildinfo
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Uploads and temporary files (user data - never commit)
+uploads/
+tmp/
+*.pdf
+
+# IDE and editors
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Optional npm cache
+.npm
+
+# Archive files
+*.zip
+*.tar.gz
+*.rar
+
+# Python artifacts (legacy - fully disabled)
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+*.egg-info/
+.eggs/
+venv/
+
+# Vercel
+.vercel/
+
+# TypeScript declaration maps (optional but cleaner)
+*.d.ts.map
+
+# Mac hidden files inside folders
+**/.DS_Store
