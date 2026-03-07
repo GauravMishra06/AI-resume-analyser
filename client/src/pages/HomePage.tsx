@@ -13,11 +13,7 @@ const HomePage: React.FC = () => {
     const [jobRole, setJobRole] = useState<string>('');
 
     const handleFileSelect = useCallback(async (file: File) => {
-        const token = localStorage.getItem('token');
-        if (!token) {
-            navigate('/login');
-            return;
-        }
+     
 
         setProcessingState('uploading');
         setErrorMessage(undefined);

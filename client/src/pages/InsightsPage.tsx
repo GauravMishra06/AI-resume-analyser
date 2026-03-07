@@ -41,7 +41,7 @@ const InsightsPage: React.FC = () => {
 
     // Redirect if no analysis data
     if (!state?.analysis) {
-        return <Navigate to="/" replace />;
+        return <Navigate to="/upload" replace />;
     }
 
     const { analysis, fileName, targetJob } = state;
@@ -94,7 +94,7 @@ const InsightsPage: React.FC = () => {
                 <div className="container py-4 md:py-5 flex items-center justify-between">
                     <div className="flex items-center gap-4">
                         <Link
-                            to="/"
+                            to="/upload"
                             className="w-10 h-10 rounded-full bg-surface-200 hover:bg-surface-300 flex items-center justify-center transition-colors text-gray-400 hover:text-white"
                             title="Back to Upload"
                         >
@@ -112,7 +112,7 @@ const InsightsPage: React.FC = () => {
                         <Button variant="secondary" size="sm" className="hidden md:flex">
                             <Download className="w-4 h-4 mr-2" /> PDF
                         </Button>
-                        <Link to="/">
+                        <Link to="/upload">
                             <Button variant="primary" size="sm">
                                 New Scan
                             </Button>

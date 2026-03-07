@@ -6,7 +6,7 @@ import { FileText, LogOut } from "lucide-react";
 const Header = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const isHome = location.pathname === "/";
+  const isHome = location.pathname === "/" || location.pathname === "/upload";
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
@@ -39,7 +39,7 @@ const Header = () => {
           <nav className="flex items-center gap-4">
             {!isHome && (
               <Link
-                to="/"
+                to="/upload"
                 className="text-sm font-medium text-gray-400 hover:text-white transition-colors"
               >
                 New Analysis
