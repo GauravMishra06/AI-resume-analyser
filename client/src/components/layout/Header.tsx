@@ -8,14 +8,28 @@ const Header = () => {
   const navigate = useNavigate();
   const isHome = location.pathname === "/" || location.pathname === "/upload";
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userName, setUserName] = useState("");
 
   useEffect(() => {
     setIsLoggedIn(!!localStorage.getItem("token"));
+    setUserName(localStorage.getItem("userName") || "");
   }, [location]);
+
+  const getInitials = (name: string) => {
+    if (!name) return "U";
+    return name
+      .split(" ")
+      .map((n) => n[0])
+      .join("")
+      .toUpperCase()
+      .slice(0, 2);
+  };
 
   const handleLogout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("userName");
     setIsLoggedIn(false);
+    setUserName("");
     navigate("/login");
   };
 
@@ -46,13 +60,25 @@ const Header = () => {
               </Link>
             )}
             {isLoggedIn ? (
-              <button
-                onClick={handleLogout}
-                className="flex items-center gap-1.5 text-sm font-medium text-gray-400 hover:text-white transition-colors"
-              >
-                <LogOut className="w-4 h-4" />
-                Logout
-              </button>
+              <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary-500 to-accent-violet flex items-center justify-center text-white text-xs font-bold shadow-glow-sm">
+                    {getInitials(userName)}
+                  </div>
+                  {userName && (
+                    <span className="text-sm font-medium text-gray-300 hidden md:block">
+                      {userName}
+                    </span>
+                  )}
+                </div>
+                <button
+                  onClick={handleLogout}
+                  className="flex items-center gap-1.5 text-sm font-medium text-gray-400 hover:text-white transition-colors"
+                >
+                  <LogOut className="w-4 h-4" />
+                  <span className="hidden md:inline">Logout</span>
+                </button>
+              </div>
             ) : (
               <>
                 <Link

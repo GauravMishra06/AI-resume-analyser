@@ -1,5 +1,5 @@
 import { useState, ChangeEvent, FormEvent } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Mail, Lock, ArrowRight, FileText } from "lucide-react";
 import { AnimatedBackground } from "../components/ui";
@@ -7,6 +7,8 @@ import { LoginFormData } from "../types/Auth";
 
 export default function Login() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const redirectTo = (location.state as { from?: string })?.from || "/upload";
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -46,7 +48,7 @@ export default function Login() {
 
       localStorage.setItem("token", data.token);
       if (data.name) localStorage.setItem("userName", data.name);
-      navigate("/");
+      navigate(redirectTo);
     } catch (error: any) {
       setError(error.message);
     } finally {
