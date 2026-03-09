@@ -6,7 +6,7 @@
     "server"
   ],
   "scripts": {
-    "build:client": "cd client && npm install && npm run build",
+    "build": "cd client && npm install && npm run build && rm -rf ../dist && mv dist ../dist",
     "build:server": "cd server && npm install && npm run build"
   }
 }
