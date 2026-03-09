@@ -89,6 +89,10 @@ app.use(
 );
 
 // ✅ Start server
-app.listen(PORT, () => {
-  logger.info(`🚀 Server running at http://localhost:${PORT}`);
-});
+if (process.env.NODE_ENV !== "production") {
+  app.listen(PORT, () => {
+    logger.info(`🚀 Server running at http://localhost:${PORT}`);
+  });
+}
+
+export default app;
