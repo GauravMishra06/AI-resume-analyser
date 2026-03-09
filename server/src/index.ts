@@ -89,7 +89,7 @@ app.use(
 );
 
 // ✅ Start server
-if (process.env.NODE_ENV !== "production") {
+if (!process.env.VERCEL) {
   app.listen(PORT, () => {
     logger.info(`🚀 Server running at http://localhost:${PORT}`);
   });

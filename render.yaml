@@ -1,0 +1,33 @@
+services:
+  # Backend Web Service
+  - type: web
+    name: ai-resume-analyzer-api
+    env: node
+    rootDir: server
+    buildCommand: npm install && npm run build
+    startCommand: npm run start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: MONGODB_URI
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: GROQ_API_KEY
+        sync: false
+      - key: CLIENT_URL
+        value: https://ai-resume-analyzer-web.onrender.com
+
+  # Frontend Static Site
+  - type: static
+    name: ai-resume-analyzer-web
+    env: static
+    rootDir: client
+    buildCommand: npm install && npm run build
+    publishDir: dist
+    routes:
+      - type: rewrite
+        src: /*
+        dest: /index.html
