@@ -21,13 +21,13 @@ services:
         value: https://ai-resume-analyzer-web.onrender.com
 
   # Frontend Static Site
-  - type: static
+  - type: web
     name: ai-resume-analyzer-web
-    env: static
+    runtime: static
     rootDir: client
     buildCommand: npm install && npm run build
-    publishDir: dist
+    staticPublishPath: dist
     routes:
       - type: rewrite
-        src: /*
-        dest: /index.html
+        source: /*
+        destination: /index.html
