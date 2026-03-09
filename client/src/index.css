@@ -88,64 +88,82 @@
     @apply text-[13px] font-medium text-gray-500 tracking-wide uppercase;
   }
 
-  /* Glass effect - Dark */
+  /* Glass effect - Premium Apple-like */
   .glass {
-    @apply bg-surface-50/80 backdrop-blur-xl border border-white/[0.06] shadow-lg;
+    @apply bg-surface-50/70 backdrop-blur-2xl border border-white/[0.08] shadow-[0_8px_32px_rgba(0,0,0,0.4)];
   }
 
   .glass-card {
-    @apply bg-surface-100/60 backdrop-blur-lg border border-white/[0.06] shadow-card hover:shadow-card-hover transition-all duration-300 ease-apple;
+    @apply bg-surface-100/40 backdrop-blur-xl border border-white/[0.1] shadow-card hover:shadow-card-hover transition-all duration-500 ease-apple;
+    box-shadow: 
+      0 4px 24px rgba(0, 0, 0, 0.4), 
+      0 0 0 1px rgba(255, 255, 255, 0.05),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.02);
+  }
+
+  .glass-card:hover {
+    @apply border-white/[0.18] bg-surface-100/50;
+    transform: translateY(-2px);
+    box-shadow: 
+      0 12px 40px rgba(0, 0, 0, 0.5), 
+      0 0 0 1px rgba(255, 255, 255, 0.1),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+  }
+
+  /* Glow utility */
+  .glow-primary {
+    @apply relative after:absolute after:inset-0 after:rounded-[inherit] after:bg-primary-500/20 after:blur-2xl after:-z-10 after:opacity-0 hover:after:opacity-100 after:transition-opacity after:duration-500;
   }
 
   /* Card base - Dark */
   .card {
-    @apply bg-surface-100 rounded-3xl shadow-card border border-white/[0.06] overflow-hidden;
+    @apply bg-surface-100 rounded-[2.5rem] shadow-card border border-white/[0.06] overflow-hidden;
   }
 
   .card-premium {
-    @apply bg-surface-100 rounded-4xl shadow-2xl border border-white/[0.08];
+    @apply bg-surface-100 rounded-[3rem] shadow-2xl border border-white/[0.08] relative overflow-hidden;
   }
 
-  /* Gradient text */
+  /* Gradient text - More vibrant */
   .gradient-text {
-    @apply bg-clip-text text-transparent bg-gradient-to-br from-white to-gray-400;
+    @apply bg-clip-text text-transparent bg-gradient-to-br from-white via-white to-gray-500;
   }
 
   .gradient-blue {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary-400 via-accent-violet to-accent-purple;
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary-400 via-accent-blue to-accent-violet;
   }
 
-  /* Button base styles */
+  /* Button base styles - More refined */
   .btn {
-    @apply inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full font-medium text-[15px] transition-all duration-300 ease-apple disabled:opacity-50 disabled:cursor-not-allowed transform active:scale-95;
+    @apply inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-2xl font-semibold text-[15px] transition-all duration-500 ease-apple disabled:opacity-50 disabled:cursor-not-allowed transform active:scale-[0.97];
   }
 
   .btn-primary {
-    @apply bg-primary-500 text-white hover:bg-primary-400 shadow-lg shadow-primary-500/20 hover:shadow-primary-400/30;
+    @apply bg-primary-500 text-white hover:bg-primary-400 shadow-[0_4px_20px_rgba(59,130,246,0.3)] hover:shadow-[0_8px_30px_rgba(59,130,246,0.5)];
   }
 
   .btn-accent {
-    @apply bg-gradient-to-r from-primary-500 to-accent-violet text-white hover:from-primary-400 hover:to-accent-purple shadow-lg shadow-accent-violet/20;
+    @apply bg-gradient-to-r from-primary-500 to-accent-violet text-white hover:brightness-110 shadow-[0_4px_20px_rgba(139,92,246,0.3)] hover:shadow-[0_8px_30px_rgba(139,92,246,0.5)];
   }
 
   .btn-secondary {
-    @apply bg-surface-200 text-gray-200 hover:bg-surface-300 border border-white/[0.06];
+    @apply bg-white/5 text-white hover:bg-white/10 border border-white/10 backdrop-blur-md;
   }
 
   .btn-ghost {
-    @apply bg-transparent text-gray-400 hover:bg-surface-200 hover:text-gray-200;
+    @apply bg-transparent text-gray-400 hover:bg-white/5 hover:text-white;
   }
 
   .btn-lg {
-    @apply px-8 py-4 text-[17px] rounded-full;
+    @apply px-10 py-5 text-[17px] rounded-2xl;
   }
 
   .btn-sm {
-    @apply px-4 py-2 text-[13px] rounded-full;
+    @apply px-5 py-2.5 text-[13px] rounded-xl;
   }
 
   .btn-icon {
-    @apply w-10 h-10 p-0 rounded-full flex items-center justify-center;
+    @apply w-12 h-12 p-0 rounded-2xl flex items-center justify-center;
   }
 }
 

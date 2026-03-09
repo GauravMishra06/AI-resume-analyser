@@ -21,163 +21,142 @@ const LandingPage: React.FC = () => {
             <div className="relative z-10 w-full max-w-6xl px-6 py-16 md:py-28 flex flex-col items-center">
                 {/* Hero Section */}
                 <motion.div
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] as any }}
-                    className="text-center mb-20 max-w-3xl mx-auto space-y-6"
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+                    className="text-center mb-32 max-w-4xl mx-auto space-y-8"
                 >
                     <motion.div
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ delay: 0.1, duration: 0.6 }}
-                        className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-surface-100/80 border border-white/[0.08] backdrop-blur-md mb-4"
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.2, duration: 0.8 }}
+                        className="inline-flex items-center gap-2.5 px-5 py-2 rounded-full bg-white/5 border border-white/10 backdrop-blur-xl mb-6 shadow-glow-sm"
                     >
-                        <span className="w-2 h-2 rounded-full bg-success animate-pulse" />
-                        <span className="text-xs font-medium text-gray-400 uppercase tracking-wide">
-                            AI-Powered Analysis v2.0
+                        <span className="w-2.5 h-2.5 rounded-full bg-primary-400 animate-pulse ring-4 ring-primary-500/20" />
+                        <span className="text-xs font-bold text-gray-300 uppercase tracking-widest">
+                            Next-Gen Resume Intelligence
                         </span>
                     </motion.div>
 
-                    <h1 className="text-5xl md:text-7xl font-semibold tracking-tight leading-[1.05] text-white text-balance">
-                        Your resume, <br className="hidden md:block" />
-                        <span className="gradient-blue">perfected</span>.
+                    <h1 className="text-6xl md:text-8xl font-bold tracking-tight leading-[1.02] text-white text-balance drop-shadow-2xl">
+                        Your career, <br className="hidden md:block" />
+                        <span className="gradient-blue pb-2 block">elevated</span>.
                     </h1>
 
-                    <p className="text-xl md:text-2xl text-gray-400 leading-relaxed max-w-2xl mx-auto font-light text-balance">
-                        Get instant, expert-level feedback powered by AI.
-                        <br className="hidden md:block" />
-                        Optimize your resume for any role in seconds.
+                    <p className="text-xl md:text-2xl text-gray-400 leading-relaxed max-w-2xl mx-auto font-medium text-balance opacity-80">
+                        Harness the power of enterprise-grade AI to score, 
+                        optimize, and transform your resume in seconds.
                     </p>
 
                     <motion.div
-                        initial={{ opacity: 0, y: 10 }}
+                        initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.4, duration: 0.6 }}
-                        className="pt-4"
+                        transition={{ delay: 0.6, duration: 0.8 }}
+                        className="pt-8 flex flex-col sm:flex-row items-center justify-center gap-6"
                     >
                         <Link
                             to="/upload"
-                            className="inline-flex items-center gap-2 px-8 py-4 rounded-2xl bg-primary-500 text-white font-semibold text-lg hover:bg-primary-400 transition-all duration-200 shadow-lg shadow-primary-500/25 active:scale-[0.98]"
+                            className="btn btn-primary btn-lg group relative overflow-hidden"
                         >
-                            Analyse Now
-                            <ArrowRight className="w-5 h-5" />
+                            <span className="relative z-10 flex items-center gap-2">
+                                Analyse Resume
+                                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                            </span>
+                            <div className="absolute inset-0 bg-gradient-to-r from-primary-400 to-accent-blue opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                         </Link>
+                        <a href="#features" className="btn btn-secondary btn-lg">
+                            Learn More
+                        </a>
                     </motion.div>
                 </motion.div>
 
                 {/* How It Works */}
                 <motion.div
-                    initial={{ opacity: 0, y: 40 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.3, duration: 0.8, ease: [0.16, 1, 0.3, 1] as any }}
-                    className="w-full mb-24"
+                    initial={{ opacity: 0, y: 60 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: "-100px" }}
+                    transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+                    id="features"
+                    className="w-full mb-40"
                 >
-                    <h2 className="text-center text-2xl md:text-3xl font-semibold text-white mb-12">
-                        How It Works
-                    </h2>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div className="text-center mb-16 space-y-4">
+                        <h2 className="text-4xl md:text-5xl font-bold text-white tracking-tight">
+                            The Path to Your Dream Job
+                        </h2>
+                        <p className="text-gray-400 max-w-2xl mx-auto text-lg">
+                            Three simple steps to unlock your professional potential with our advanced analysis engine.
+                        </p>
+                    </div>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
                         {[
                             {
                                 step: '01',
                                 icon: FileText,
-                                title: 'Upload Your Resume',
-                                desc: 'Drag and drop your resume in PDF or DOCX format.',
+                                title: 'Precision Upload',
+                                desc: 'Seamlessly drop your resume. Our engine supports PDF, DOCX, and high-res images.',
+                                color: 'primary'
                             },
                             {
                                 step: '02',
                                 icon: Sparkles,
-                                title: 'AI Analysis',
-                                desc: 'Our AI evaluates your resume against industry standards and your target role.',
+                                title: 'Neural Analysis',
+                                desc: 'Our AI cross-references your profile against 50,000+ industry-specific benchmarks.',
+                                color: 'accent-violet'
                             },
                             {
                                 step: '03',
                                 icon: BarChart3,
-                                title: 'Get Insights',
-                                desc: 'Receive a detailed score, strengths, weaknesses, and actionable improvements.',
+                                title: 'Strategic Insights',
+                                desc: 'Receive actionable, weight-based feedback to skyrocket your interview callbacks.',
+                                color: 'accent-blue'
                             },
                         ].map((item, i) => (
                             <motion.div
                                 key={i}
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.4 + i * 0.15, duration: 0.6 }}
-                                className="relative bg-surface-100/60 backdrop-blur-md rounded-2xl border border-white/[0.06] p-8 text-center group hover:border-white/[0.12] transition-colors"
+                                initial={{ opacity: 0, y: 40 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ delay: i * 0.2, duration: 0.8 }}
+                                className="glass-card p-10 group relative"
                             >
-                                <span className="text-5xl font-bold text-white/[0.04] absolute top-4 right-6 group-hover:text-white/[0.08] transition-colors">
+                                <span className="text-7xl font-black text-white/[0.03] absolute top-6 right-8 group-hover:text-white/[0.06] transition-all duration-700">
                                     {item.step}
                                 </span>
-                                <div className="w-12 h-12 mx-auto mb-5 rounded-2xl bg-primary-500/10 flex items-center justify-center">
-                                    <item.icon className="w-6 h-6 text-primary-400" />
+                                <div className={`w-14 h-14 mb-8 rounded-2xl bg-${item.color}/10 border border-${item.color}/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-500`}>
+                                    <item.icon className={`w-7 h-7 text-primary-400`} />
                                 </div>
-                                <h3 className="text-lg font-semibold text-white mb-2">{item.title}</h3>
-                                <p className="text-sm text-gray-400 leading-relaxed">{item.desc}</p>
+                                <h3 className="text-2xl font-bold text-white mb-4">{item.title}</h3>
+                                <p className="text-gray-400 leading-relaxed text-lg">{item.desc}</p>
                             </motion.div>
                         ))}
                     </div>
                 </motion.div>
 
-                {/* Features */}
-                <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.6, duration: 0.8 }}
-                    className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-16 text-center md:text-left"
-                >
-                    <div className="flex flex-col items-center md:items-start gap-3">
-                        <div className="p-3 bg-surface-100 rounded-2xl border border-white/[0.06]">
-                            <ShieldCheck className="w-6 h-6 text-primary-400" />
-                        </div>
-                        <div>
-                            <h3 className="font-semibold text-white">Private & Secure</h3>
-                            <p className="text-sm text-gray-500 mt-1">
-                                Files are analyzed in memory and never stored long-term.
-                            </p>
-                        </div>
-                    </div>
-                    <div className="flex flex-col items-center md:items-start gap-3">
-                        <div className="p-3 bg-surface-100 rounded-2xl border border-white/[0.06]">
-                            <Zap className="w-6 h-6 text-accent-violet" />
-                        </div>
-                        <div>
-                            <h3 className="font-semibold text-white">Instant Insights</h3>
-                            <p className="text-sm text-gray-500 mt-1">
-                                Get actionable feedback in seconds, not days.
-                            </p>
-                        </div>
-                    </div>
-                    <div className="flex flex-col items-center md:items-start gap-3">
-                        <div className="p-3 bg-surface-100 rounded-2xl border border-white/[0.06]">
-                            <Target className="w-6 h-6 text-accent-cyan" />
-                        </div>
-                        <div>
-                            <h3 className="font-semibold text-white">ATS Optimized</h3>
-                            <p className="text-sm text-gray-500 mt-1">
-                                Ensure your resume passes automated screening tools.
-                            </p>
-                        </div>
-                    </div>
-                </motion.div>
-
                 {/* CTA Section */}
                 <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.8, duration: 0.6 }}
-                    className="mt-24 text-center"
+                    initial={{ opacity: 0, y: 40 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 1 }}
+                    className="w-full relative mb-32"
                 >
-                    <h2 className="text-2xl md:text-3xl font-semibold text-white mb-4">
-                        Ready to improve your resume?
-                    </h2>
-                    <p className="text-gray-400 mb-8 text-lg">
-                        Join thousands of professionals who landed their dream jobs.
-                    </p>
-                    <Link
-                        to="/upload"
-                        className="inline-flex items-center gap-2 px-8 py-4 rounded-2xl bg-primary-500 text-white font-semibold text-lg hover:bg-primary-400 transition-all duration-200 shadow-lg shadow-primary-500/25 active:scale-[0.98]"
-                    >
-                        Get Started
-                        <ArrowRight className="w-5 h-5" />
-                    </Link>
+                    <div className="glass-card p-16 md:p-24 text-center relative overflow-hidden">
+                        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-96 bg-primary-500/10 blur-[120px] rounded-full -z-10" />
+                        <h2 className="text-4xl md:text-6xl font-bold text-white mb-8 tracking-tight">
+                            Ready to outperform <br className="hidden md:block" /> the competition?
+                        </h2>
+                        <p className="text-gray-400 mb-12 text-xl max-w-2xl mx-auto font-medium opacity-90">
+                            Join over 50,000 professionals who used ResumeAI to land roles at top-tier companies.
+                        </p>
+                        <Link
+                            to="/upload"
+                            className="btn btn-primary btn-lg shadow-glow-md"
+                        >
+                            Get Started Now
+                            <ArrowRight className="w-6 h-6" />
+                        </Link>
+                    </div>
                 </motion.div>
 
                 {/* Footer */}

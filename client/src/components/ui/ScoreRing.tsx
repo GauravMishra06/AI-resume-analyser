@@ -36,9 +36,9 @@ export const ScoreRing: React.FC<ScoreRingProps> = ({
     const strokeDashoffset = circumference - (percentage / 100) * circumference;
 
     const getScoreColor = () => {
-        if (percentage >= 80) return '#34C759'; // Apple Green
-        if (percentage >= 60) return '#FF9F0A'; // Apple Orange
-        return '#FF3B30'; // Apple Red
+        if (percentage >= 80) return '#60a5fa'; // Premium Blue
+        if (percentage >= 60) return '#8b5cf6'; // Premium Violet
+        return '#f43f5e'; // Premium Rose
     };
 
     const getScoreLabel = () => {

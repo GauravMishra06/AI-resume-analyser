@@ -80,7 +80,7 @@ export const UploadCard: React.FC<UploadCardProps> = ({
         >
             {/* Job Role Input */}
             <div className="relative group">
-                <div className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-primary-400 transition-colors duration-200 z-10">
+                <div className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-primary-400 transition-colors duration-500 z-10">
                     <Briefcase className="w-5 h-5" />
                 </div>
                 <input
@@ -90,13 +90,13 @@ export const UploadCard: React.FC<UploadCardProps> = ({
                     placeholder="Target Job Role (Optional)"
                     disabled={isProcessing}
                     className={`
-                        w-full pl-14 pr-5 py-4 rounded-3xl
-                        bg-surface-100/80 backdrop-blur-xl border border-white/[0.08]
-                        shadow-lg shadow-black/20
+                        w-full pl-16 pr-6 py-5 rounded-[2rem]
+                        bg-surface-100/40 backdrop-blur-2xl border border-white/[0.08]
+                        shadow-2xl shadow-black/40
                         text-white placeholder-gray-500
                         focus:outline-none focus:ring-4 focus:ring-primary-500/10 focus:border-primary-500/40
                         disabled:opacity-50 disabled:cursor-not-allowed
-                        transition-all duration-300 ease-apple
+                        transition-all duration-500 ease-expo
                     `}
                     id="job-role-input"
                 />
@@ -109,23 +109,23 @@ export const UploadCard: React.FC<UploadCardProps> = ({
                 onDrop={handleDrop}
                 className={`
                     relative flex flex-col items-center justify-center
-                    w-full h-80 rounded-[40px]
-                    border-[2px] border-dashed
-                    transition-all duration-300 ease-spring cursor-pointer
+                    w-full h-96 rounded-[3rem]
+                    border-2 border-dashed
+                    transition-all duration-700 ease-expo cursor-pointer
                     overflow-hidden group
                     ${isDragging
-                        ? 'border-primary-400 bg-primary-500/[0.08] scale-[1.02] shadow-glow-md'
+                        ? 'border-primary-400 bg-primary-500/[0.1] scale-[1.02] shadow-glow-lg'
                         : isError
-                            ? 'border-error/50 bg-error/[0.05]'
+                            ? 'border-error/40 bg-error/[0.08]'
                             : isComplete
-                                ? 'border-success/50 bg-success/[0.05]'
-                                : 'border-white/[0.08] bg-surface-100/60 hover:border-primary-500/30 hover:bg-surface-100/80 hover:shadow-glow-sm'
+                                ? 'border-success/40 bg-success/[0.08]'
+                                : 'border-white/[0.1] bg-surface-100/30 hover:border-primary-500/40 hover:bg-surface-100/40 hover:shadow-glow-md'
                     }
                     ${isProcessing ? 'pointer-events-none' : ''}
                 `}
             >
                 {/* Glass Background Layer */}
-                <div className="absolute inset-0 backdrop-blur-xl -z-10" />
+                <div className="absolute inset-0 backdrop-blur-3xl -z-10" />
 
                 <input
                     type="file"
