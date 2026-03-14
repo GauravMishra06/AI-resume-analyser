@@ -29,6 +29,37 @@ export interface ResumeAnalysisResponse {
     warnings: string[];
 }
 
+export interface JDMatchResponse {
+    target_job: string;
+    overall_match: number;
+    matched_requirements: string[];
+    weak_requirements: string[];
+    missing_requirements: string[];
+    top_actions: string[];
+}
+
+export interface RewriteSuggestion {
+    id: string;
+    section: string;
+    original: string;
+    rewritten: string;
+    rationale: string;
+    impact: 'high' | 'medium' | 'low';
+}
+
+export interface RewriteResponse {
+    target_job: string;
+    suggestions: RewriteSuggestion[];
+}
+
+export interface InterviewReadinessResponse {
+    target_job: string;
+    readiness_score: number;
+    likely_questions: string[];
+    vulnerable_claims: string[];
+    preparation_plan: string[];
+}
+
 // Lazy initialization of Gemini client (created after dotenv loads)
 let geminiClient: GoogleGenerativeAI | null = null;
 
@@ -154,6 +185,27 @@ function buildTextPrompt(resumeText: string, targetJob?: string): string {
 }
 
 /**
+ * Parse a JSON object out of LLM text.
+ */
+function parseJsonObject(content: string): Record<string, unknown> {
+    let jsonStr = content.trim();
+
+    const jsonMatch = content.match(/```(?:json)?\s*([\s\S]*?)```/);
+    if (jsonMatch) {
+        jsonStr = jsonMatch[1].trim();
+    }
+
+    const startIdx = jsonStr.indexOf('{');
+    const endIdx = jsonStr.lastIndexOf('}');
+
+    if (startIdx === -1 || endIdx === -1 || endIdx <= startIdx) {
+        throw new Error('No valid JSON object found in response');
+    }
+
+    return JSON.parse(jsonStr.substring(startIdx, endIdx + 1)) as Record<string, unknown>;
+}
+
+/**
  * Parse and validate the LLM response
  */
 function parseResponse(content: string, targetJob?: string): ResumeAnalysisResponse {
@@ -230,6 +282,170 @@ function parseResponse(content: string, targetJob?: string): ResumeAnalysisRespo
     };
 
     return response;
+}
+
+async function generateStructuredJson(prompt: string): Promise<Record<string, unknown>> {
+    const model = getGeminiClient().getGenerativeModel({
+        model: TEXT_MODEL,
+        generationConfig,
+        safetySettings,
+    });
+
+    const result = await model.generateContent(prompt);
+    const content = result.response.text();
+
+    if (!content) {
+        throw new Error('Empty response from LLM');
+    }
+
+    return parseJsonObject(content);
+}
+
+export async function analyzeJobDescriptionMatch(
+    resumeText: string,
+    jobDescription: string,
+    targetJob?: string
+): Promise<JDMatchResponse> {
+    const role = targetJob?.trim() || 'Target Role';
+    const prompt = `You are an expert recruiting analyst.
+Return ONLY valid JSON.
+
+Schema:
+{
+  "target_job": "string",
+  "overall_match": number,
+  "matched_requirements": ["string"],
+  "weak_requirements": ["string"],
+  "missing_requirements": ["string"],
+  "top_actions": ["string"]
+}
+
+Rules:
+- overall_match must be 0-100 integer
+- Keep each array concise and actionable
+- Focus on ATS and recruiter expectations
+
+Target job: ${role}
+
+Job Description:
+${jobDescription}
+
+Resume:
+${resumeText}`;
+
+    const parsed = await generateStructuredJson(prompt);
+    const overallRaw = Number(parsed.overall_match);
+
+    return {
+        target_job: String(parsed.target_job || role),
+        overall_match: Number.isFinite(overallRaw) ? Math.max(0, Math.min(100, Math.round(overallRaw))) : 50,
+        matched_requirements: Array.isArray(parsed.matched_requirements) ? parsed.matched_requirements.map(String) : [],
+        weak_requirements: Array.isArray(parsed.weak_requirements) ? parsed.weak_requirements.map(String) : [],
+        missing_requirements: Array.isArray(parsed.missing_requirements) ? parsed.missing_requirements.map(String) : [],
+        top_actions: Array.isArray(parsed.top_actions) ? parsed.top_actions.map(String) : [],
+    };
+}
+
+export async function generateRewriteSuggestions(
+    resumeText: string,
+    targetJob?: string
+): Promise<RewriteResponse> {
+    const role = targetJob?.trim() || 'Target Role';
+    const prompt = `You are an elite resume editor.
+Return ONLY valid JSON.
+
+Schema:
+{
+  "target_job": "string",
+  "suggestions": [
+    {
+      "id": "string",
+      "section": "string",
+      "original": "string",
+      "rewritten": "string",
+      "rationale": "string",
+      "impact": "high|medium|low"
+    }
+  ]
+}
+
+Rules:
+- Produce 4-8 suggestions max
+- Rewrite for measurable impact and ATS clarity
+- Keep rewritten text realistic and not fabricated
+
+Target job: ${role}
+
+Resume:
+${resumeText}`;
+
+    const parsed = await generateStructuredJson(prompt);
+    const suggestionsRaw = Array.isArray(parsed.suggestions) ? parsed.suggestions : [];
+
+    const suggestions: RewriteSuggestion[] = suggestionsRaw
+        .map((item, index) => {
+            const value = item as Record<string, unknown>;
+            const impactValue = String(value.impact || 'medium').toLowerCase();
+            const impact: 'high' | 'medium' | 'low' =
+                impactValue === 'high' || impactValue === 'low' ? impactValue : 'medium';
+
+            return {
+                id: String(value.id || `rw-${index + 1}`),
+                section: String(value.section || 'Experience'),
+                original: String(value.original || ''),
+                rewritten: String(value.rewritten || ''),
+                rationale: String(value.rationale || 'Improves clarity and relevance.'),
+                impact,
+            };
+        })
+        .filter((item) => item.original.trim() && item.rewritten.trim());
+
+    return {
+        target_job: String(parsed.target_job || role),
+        suggestions,
+    };
+}
+
+export async function generateInterviewReadiness(
+    resumeText: string,
+    targetJob?: string
+): Promise<InterviewReadinessResponse> {
+    const role = targetJob?.trim() || 'Target Role';
+    const prompt = `You are a hiring manager and interview coach.
+Return ONLY valid JSON.
+
+Schema:
+{
+  "target_job": "string",
+  "readiness_score": number,
+  "likely_questions": ["string"],
+  "vulnerable_claims": ["string"],
+  "preparation_plan": ["string"]
+}
+
+Rules:
+- readiness_score must be 0-100 integer
+- likely_questions: 6-10 realistic interview questions
+- vulnerable_claims: resume claims likely challenged in interview
+- preparation_plan: concise and practical preparation steps
+
+Target job: ${role}
+
+Resume:
+${resumeText}`;
+
+    const parsed = await generateStructuredJson(prompt);
+    const readinessRaw = Number(parsed.readiness_score);
+
+    return {
+        target_job: String(parsed.target_job || role),
+        readiness_score: Number.isFinite(readinessRaw)
+            ? Math.max(0, Math.min(100, Math.round(readinessRaw)))
+            : 55,
+        likely_questions: Array.isArray(parsed.likely_questions) ? parsed.likely_questions.map(String) : [],
+        vulnerable_claims: Array.isArray(parsed.vulnerable_claims) ? parsed.vulnerable_claims.map(String) : [],
+        preparation_plan: Array.isArray(parsed.preparation_plan) ? parsed.preparation_plan.map(String) : [],
+    };
 }
 
 /**

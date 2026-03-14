@@ -14,6 +14,12 @@ import {
 } from 'lucide-react';
 
 const LandingPage: React.FC = () => {
+    const featureColorMap = {
+        primary: 'bg-primary-500/10 border-primary-500/20 text-primary-400',
+        violet: 'bg-accent-violet/10 border-accent-violet/20 text-accent-violet',
+        blue: 'bg-accent-blue/10 border-accent-blue/20 text-accent-blue',
+    } as const;
+
     return (
         <div className="min-h-screen flex flex-col items-center relative overflow-hidden bg-surface">
             <AnimatedBackground />
@@ -95,21 +101,21 @@ const LandingPage: React.FC = () => {
                                 icon: FileText,
                                 title: 'Precision Upload',
                                 desc: 'Seamlessly drop your resume. Our engine supports PDF, DOCX, and high-res images.',
-                                color: 'primary'
+                                color: featureColorMap.primary
                             },
                             {
                                 step: '02',
                                 icon: Sparkles,
                                 title: 'Neural Analysis',
                                 desc: 'Our AI cross-references your profile against 50,000+ industry-specific benchmarks.',
-                                color: 'accent-violet'
+                                color: featureColorMap.violet
                             },
                             {
                                 step: '03',
                                 icon: BarChart3,
                                 title: 'Strategic Insights',
                                 desc: 'Receive actionable, weight-based feedback to skyrocket your interview callbacks.',
-                                color: 'accent-blue'
+                                color: featureColorMap.blue
                             },
                         ].map((item, i) => (
                             <motion.div
@@ -123,8 +129,8 @@ const LandingPage: React.FC = () => {
                                 <span className="text-7xl font-black text-white/[0.03] absolute top-6 right-8 group-hover:text-white/[0.06] transition-all duration-700">
                                     {item.step}
                                 </span>
-                                <div className={`w-14 h-14 mb-8 rounded-2xl bg-${item.color}/10 border border-${item.color}/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-500`}>
-                                    <item.icon className={`w-7 h-7 text-primary-400`} />
+                                <div className={`w-14 h-14 mb-8 rounded-2xl border flex items-center justify-center group-hover:scale-110 transition-transform duration-500 ${item.color}`}>
+                                    <item.icon className="w-7 h-7" />
                                 </div>
                                 <h3 className="text-2xl font-bold text-white mb-4">{item.title}</h3>
                                 <p className="text-gray-400 leading-relaxed text-lg">{item.desc}</p>

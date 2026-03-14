@@ -43,5 +43,49 @@ export interface UploadResponse {
     analysis: ResumeAnalysisResponse;
 }
 
+export interface JDMatchResponse {
+    target_job: string;
+    overall_match: number;
+    matched_requirements: string[];
+    weak_requirements: string[];
+    missing_requirements: string[];
+    top_actions: string[];
+}
+
+export interface RewriteSuggestion {
+    id: string;
+    section: string;
+    original: string;
+    rewritten: string;
+    rationale: string;
+    impact: 'high' | 'medium' | 'low';
+}
+
+export interface RewriteResponse {
+    target_job: string;
+    suggestions: RewriteSuggestion[];
+}
+
+export interface InterviewReadinessResponse {
+    target_job: string;
+    readiness_score: number;
+    likely_questions: string[];
+    vulnerable_claims: string[];
+    preparation_plan: string[];
+}
+
+export interface ResumeVersion {
+    versionId: string;
+    resumeId: string;
+    fileName: string;
+    targetJob?: string;
+    score: number;
+    improvementsCount: number;
+    missingSkillsCount: number;
+    criticalIssuesCount: number;
+    source: 'upload' | 'analyze' | 'rewrite';
+    createdAt: string;
+}
+
 // UI State Types
 export type ProcessingState = 'idle' | 'uploading' | 'processing' | 'complete' | 'error';

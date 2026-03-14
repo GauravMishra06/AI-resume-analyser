@@ -4,7 +4,12 @@ import path from "path";
 import fs from "fs";
 
 import { prepareFileForAnalysis } from "../services/fileService";
-import { analyzeResume } from "../services/resumeLLMService";
+import {
+  analyzeResume,
+  analyzeJobDescriptionMatch,
+  generateRewriteSuggestions,
+  generateInterviewReadiness,
+} from "../services/resumeLLMService";
 import { AppError, ErrorCode } from "../types/errors";
 import { logger } from "../utils/logger";
 
@@ -146,6 +151,20 @@ router.post(
             score: analysis.suitability_score,
             feedback: analysis.overall_feedback,
             uploadedAt: new Date(),
+            resumeId,
+            targetJob: req.body?.target_job,
+          },
+          resumeVersions: {
+            versionId: `${resumeId}-v1`,
+            resumeId,
+            fileName: req.file.originalname,
+            targetJob: req.body?.target_job,
+            score: analysis.score ?? analysis.suitability_score,
+            improvementsCount: (analysis.improvements ?? analysis.resume_fixes ?? []).length,
+            missingSkillsCount: (analysis.missing_skills ?? []).length,
+            criticalIssuesCount: (analysis.potential_problems ?? analysis.weaknesses ?? []).length,
+            source: "upload",
+            createdAt: new Date(),
           },
         },
       });
@@ -201,6 +220,19 @@ router.post(
             score: analysis.suitability_score,
             feedback: analysis.overall_feedback,
             uploadedAt: new Date(),
+            targetJob: target_job,
+          },
+          resumeVersions: {
+            versionId: `${Date.now()}-analyze-v1`,
+            resumeId: `${Date.now()}-text`,
+            fileName: "text-analysis",
+            targetJob: target_job,
+            score: analysis.score ?? analysis.suitability_score,
+            improvementsCount: (analysis.improvements ?? analysis.resume_fixes ?? []).length,
+            missingSkillsCount: (analysis.missing_skills ?? []).length,
+            criticalIssuesCount: (analysis.potential_problems ?? analysis.weaknesses ?? []).length,
+            source: "analyze",
+            createdAt: new Date(),
           },
         },
       });
@@ -233,6 +265,193 @@ router.get(
       });
     } catch (error) {
       logger.error("Failed to fetch resumes", error);
+      return sendErrorResponse(res, error);
+    }
+  }
+);
+
+//////////////////////////////////////////////////////////////////
+// 🔐 JOB DESCRIPTION MATCH MAP
+//////////////////////////////////////////////////////////////////
+
+router.post(
+  "/jd-match",
+  protect,
+  async (req: AuthRequest, res: Response) => {
+    try {
+      const { resume_text, job_description, target_job } = req.body;
+
+      if (!resume_text || typeof resume_text !== "string" || resume_text.length < 50) {
+        throw new AppError(
+          ErrorCode.VALIDATION_ERROR,
+          "Resume text too short"
+        );
+      }
+
+      if (
+        !job_description ||
+        typeof job_description !== "string" ||
+        job_description.length < 30
+      ) {
+        throw new AppError(
+          ErrorCode.VALIDATION_ERROR,
+          "Job description too short"
+        );
+      }
+
+      const match = await analyzeJobDescriptionMatch(
+        resume_text,
+        job_description,
+        target_job
+      );
+
+      return res.status(200).json({
+        success: true,
+        data: match,
+      });
+    } catch (error) {
+      logger.error("JD match analysis failed", error);
+      return sendErrorResponse(res, error);
+    }
+  }
+);
+
+//////////////////////////////////////////////////////////////////
+// 🔐 REWRITE STUDIO SUGGESTIONS
+//////////////////////////////////////////////////////////////////
+
+router.post(
+  "/rewrite",
+  protect,
+  async (req: AuthRequest, res: Response) => {
+    try {
+      const { resume_text, target_job } = req.body;
+
+      if (!resume_text || typeof resume_text !== "string" || resume_text.length < 50) {
+        throw new AppError(
+          ErrorCode.VALIDATION_ERROR,
+          "Resume text too short"
+        );
+      }
+
+      const rewrite = await generateRewriteSuggestions(resume_text, target_job);
+
+      return res.status(200).json({
+        success: true,
+        data: rewrite,
+      });
+    } catch (error) {
+      logger.error("Rewrite suggestion generation failed", error);
+      return sendErrorResponse(res, error);
+    }
+  }
+);
+
+//////////////////////////////////////////////////////////////////
+// 🔐 INTERVIEW READINESS
+//////////////////////////////////////////////////////////////////
+
+router.post(
+  "/interview-readiness",
+  protect,
+  async (req: AuthRequest, res: Response) => {
+    try {
+      const { resume_text, target_job } = req.body;
+
+      if (!resume_text || typeof resume_text !== "string" || resume_text.length < 50) {
+        throw new AppError(
+          ErrorCode.VALIDATION_ERROR,
+          "Resume text too short"
+        );
+      }
+
+      const readiness = await generateInterviewReadiness(resume_text, target_job);
+
+      return res.status(200).json({
+        success: true,
+        data: readiness,
+      });
+    } catch (error) {
+      logger.error("Interview readiness generation failed", error);
+      return sendErrorResponse(res, error);
+    }
+  }
+);
+
+//////////////////////////////////////////////////////////////////
+// 🔐 RESUME VERSION TIMELINE
+//////////////////////////////////////////////////////////////////
+
+router.get(
+  "/versions",
+  protect,
+  async (req: AuthRequest, res: Response) => {
+    try {
+      const user = await User.findById(req.user!.id).select("resumeVersions");
+      const versions = [...(user?.resumeVersions || [])].sort(
+        (a: any, b: any) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      );
+
+      return res.status(200).json({
+        success: true,
+        data: versions,
+      });
+    } catch (error) {
+      logger.error("Failed to fetch resume versions", error);
+      return sendErrorResponse(res, error);
+    }
+  }
+);
+
+router.post(
+  "/versions",
+  protect,
+  async (req: AuthRequest, res: Response) => {
+    try {
+      const {
+        resume_id,
+        file_name,
+        target_job,
+        score,
+        improvements_count,
+        missing_skills_count,
+        critical_issues_count,
+        source,
+      } = req.body;
+
+      if (!resume_id || !file_name || score === undefined) {
+        throw new AppError(
+          ErrorCode.VALIDATION_ERROR,
+          "resume_id, file_name and score are required"
+        );
+      }
+
+      const version = {
+        versionId: `${resume_id}-${Date.now()}`,
+        resumeId: String(resume_id),
+        fileName: String(file_name),
+        targetJob: target_job ? String(target_job) : undefined,
+        score: Number(score),
+        improvementsCount: Number(improvements_count || 0),
+        missingSkillsCount: Number(missing_skills_count || 0),
+        criticalIssuesCount: Number(critical_issues_count || 0),
+        source: source === "rewrite" ? "rewrite" : "analyze",
+        createdAt: new Date(),
+      };
+
+      await User.findByIdAndUpdate(req.user!.id, {
+        $push: {
+          resumeVersions: version,
+        },
+      });
+
+      return res.status(201).json({
+        success: true,
+        data: version,
+      });
+    } catch (error) {
+      logger.error("Failed to save resume version", error);
       return sendErrorResponse(res, error);
     }
   }
