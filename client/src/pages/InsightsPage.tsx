@@ -316,7 +316,15 @@ const InsightsPage: React.FC = () => {
                             className="card-premium p-7 relative overflow-hidden"
                         >
                             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary-400 via-accent-cyan to-accent-violet" />
-                            <h2 className="text-xs uppercase tracking-[0.2em] text-gray-500 mb-6">Current Performance</h2>
+                            <div className="mb-6 text-center">
+                                <span className="inline-flex items-center px-3 py-1 rounded-full text-[10px] font-semibold uppercase tracking-[0.18em] bg-primary-500/15 border border-primary-500/35 text-primary-300 mb-3">
+                                    Live Analysis
+                                </span>
+                                <h2 className="text-2xl font-extrabold tracking-tight text-white leading-none">
+                                    Current
+                                    <span className="block gradient-blue">Performance</span>
+                                </h2>
+                            </div>
                             <div className="flex items-center justify-center mb-6">
                                 <ScoreRing score={projectedScore} maxValue={10} size="xl" />
                             </div>
