@@ -2,6 +2,7 @@ import fs from "fs";
 import path from "path";
 import { pdfToPng, PngPageOutput } from "pdf-to-png-converter";
 import mammoth from "mammoth";
+import pdfParse from "pdf-parse";
 import { AppError, ErrorCode } from "../types/errors";
 import { logger } from "../utils/logger";
 
@@ -105,6 +106,21 @@ async function convertPdfToImages(buffer: Buffer): Promise<string[]> {
 }
 
 /**
+/**
+ * Extract text from PDF buffer using pdf-parse
+ */
+async function extractPdfText(buffer: Buffer): Promise<string> {
+    try {
+        const data = await pdfParse(buffer);
+        const text = data.text?.trim() || "";
+        logger.info(`Extracted ${text.length} characters from PDF`);
+        return text;
+    } catch (err) {
+        logger.warn("PDF text extraction failed (non-fatal):", err instanceof Error ? err.message : String(err));
+        return "";
+    }
+}
+
  * Extract text from DOCX file
  */
 async function extractDocxText(buffer: Buffer): Promise<string> {
@@ -187,7 +203,10 @@ export async function prepareFileForAnalysis(
 
     if (isPdfFile(ext)) {
         logger.info(`Processing PDF file: ${originalName}`);
-        const images = await convertPdfToImages(buffer);
+        const [images, pdfText] = await Promise.all([
+            convertPdfToImages(buffer),
+            extractPdfText(buffer),
+        ]);
         return {
             originalName,
             extension: ext,
@@ -195,6 +214,7 @@ export async function prepareFileForAnalysis(
             isImage: false,
             isDocx: false,
             images,
+            text: pdfText || undefined,
         };
     }
 

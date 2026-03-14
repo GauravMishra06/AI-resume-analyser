@@ -278,7 +278,7 @@ const InsightsPage: React.FC = () => {
                 transition={{ duration: 0.5 }}
                 className="sticky top-0 z-50 bg-surface/85 backdrop-blur-2xl border-b border-white/[0.06]"
             >
-                <div className="container py-4 flex items-center justify-between gap-4">
+                <div className="container-wide py-4 flex items-center justify-between gap-4">
                     <div className="flex items-center gap-3 min-w-0">
                         <Link
                             to="/upload"
@@ -307,9 +307,9 @@ const InsightsPage: React.FC = () => {
                 </div>
             </motion.header>
 
-            <main className="container py-8 relative z-10">
-                <div className="grid grid-cols-1 xl:grid-cols-12 gap-6">
-                    <div className="xl:col-span-4">
+            <main className="container-wide py-8 relative z-10">
+                <div className="grid grid-cols-1 xl:grid-cols-12 gap-8">
+                    <div className="xl:col-span-3">
                         <motion.div
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
@@ -368,7 +368,7 @@ const InsightsPage: React.FC = () => {
                         </motion.div>
                     </div>
 
-                    <div className="xl:col-span-8 space-y-6">
+                    <div className="xl:col-span-9 space-y-6">
                         <div className="card p-3 overflow-x-auto">
                             <div className="flex items-center gap-2 min-w-max">
                                 {tabs.map((item) => (
@@ -448,10 +448,17 @@ const InsightsPage: React.FC = () => {
                                             <h3 className="text-xl font-semibold text-white">Interactive Rewrite Studio</h3>
                                             <p className="text-gray-400 text-sm mt-1">Generate section-level rewrite suggestions and accept the ones you want.</p>
                                         </div>
-                                        <Button onClick={runRewriteStudio} isLoading={rewriteLoading}>
+                                        <Button onClick={runRewriteStudio} isLoading={rewriteLoading} disabled={!resumeText}>
                                             {rewrite ? 'Regenerate' : 'Generate Suggestions'}
                                         </Button>
                                     </div>
+
+                                    {!resumeText && (
+                                        <div className="rounded-xl border border-warning/30 bg-warning/10 px-4 py-3 text-sm text-warning mb-4">
+                                            Resume text could not be extracted from this file. Text-based features require a DOCX or text-extractable PDF.
+                                        </div>
+                                    )}
+
 
                                     {rewriteError && (
                                         <div className="rounded-xl border border-error/30 bg-error/10 px-4 py-3 text-sm text-error mb-4">
@@ -525,6 +532,12 @@ const InsightsPage: React.FC = () => {
                                     <h3 className="text-xl font-semibold text-white">Job Description Match Map</h3>
                                     <p className="text-gray-400 text-sm mt-1 mb-4">Paste a job description to compare requirement coverage and identify missing signals.</p>
 
+                                    {!resumeText && (
+                                        <div className="rounded-xl border border-warning/30 bg-warning/10 px-4 py-3 text-sm text-warning mb-4">
+                                            Resume text could not be extracted from this file. Text-based features require a DOCX or text-extractable PDF.
+                                        </div>
+                                    )}
+
                                     <textarea
                                         value={jobDescription}
                                         onChange={(e) => setJobDescription(e.target.value)}
@@ -534,7 +547,7 @@ const InsightsPage: React.FC = () => {
                                     />
 
                                     <div className="mt-4">
-                                        <Button onClick={runJdMatch} isLoading={jdLoading} disabled={jobDescription.trim().length < 30}>
+                                        <Button onClick={runJdMatch} isLoading={jdLoading} disabled={!resumeText || jobDescription.trim().length < 30}>
                                             Analyze Match Map
                                         </Button>
                                     </div>
@@ -603,10 +616,17 @@ const InsightsPage: React.FC = () => {
                                             <h3 className="text-xl font-semibold text-white">Interview Readiness Mode</h3>
                                             <p className="text-gray-400 text-sm mt-1">Generate likely interview questions and challenge-risk areas based on this resume.</p>
                                         </div>
-                                        <Button onClick={runInterviewReadiness} isLoading={interviewLoading}>
+                                        <Button onClick={runInterviewReadiness} isLoading={interviewLoading} disabled={!resumeText}>
                                             {interview ? 'Refresh' : 'Generate'}
                                         </Button>
                                     </div>
+
+                                    {!resumeText && (
+                                        <div className="rounded-xl border border-warning/30 bg-warning/10 px-4 py-3 text-sm text-warning mb-4">
+                                            Resume text could not be extracted from this file. Text-based features require a DOCX or text-extractable PDF.
+                                        </div>
+                                    )}
+
 
                                     {interviewError && (
                                         <div className="rounded-xl border border-error/30 bg-error/10 px-4 py-3 text-sm text-error mb-4">

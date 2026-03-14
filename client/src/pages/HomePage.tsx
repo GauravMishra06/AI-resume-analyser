@@ -46,7 +46,7 @@ const HomePage: React.FC = () => {
         <div className="min-h-screen flex flex-col items-center justify-center relative overflow-hidden bg-surface">
             <AnimatedBackground />
 
-            <div className="relative z-10 w-full max-w-5xl px-6 py-12 md:py-24 flex flex-col items-center">
+            <div className="relative z-10 w-full max-w-screen-xl px-6 py-12 md:py-24 flex flex-col items-center">
                 {/* Hero Section */}
                 <motion.div
                     initial={{ opacity: 0, y: 30 }}

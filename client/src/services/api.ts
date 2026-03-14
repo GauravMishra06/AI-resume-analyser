@@ -99,7 +99,7 @@ export async function analyzeJobMatch(
 
     const data: ApiResponse<JDMatchResponse> = await response.json();
     if (!response.ok || !data.success || !data.data) {
-        throw new Error(data.error || 'Failed to generate job match map');
+        throw new Error(data.message || data.error || 'Failed to generate job match map');
     }
     return data.data;
 }
@@ -122,7 +122,7 @@ export async function generateRewriteStudio(
 
     const data: ApiResponse<RewriteResponse> = await response.json();
     if (!response.ok || !data.success || !data.data) {
-        throw new Error(data.error || 'Failed to generate rewrite suggestions');
+        throw new Error(data.message || data.error || 'Failed to generate rewrite suggestions');
     }
     return data.data;
 }
@@ -145,7 +145,7 @@ export async function generateInterviewReadinessReport(
 
     const data: ApiResponse<InterviewReadinessResponse> = await response.json();
     if (!response.ok || !data.success || !data.data) {
-        throw new Error(data.error || 'Failed to generate interview readiness report');
+        throw new Error(data.message || data.error || 'Failed to generate interview readiness report');
     }
     return data.data;
 }
